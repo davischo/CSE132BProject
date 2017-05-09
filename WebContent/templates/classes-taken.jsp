@@ -21,7 +21,7 @@
   <td>Grade</td>
 </tr>
 <tr>
-<form action="classes-taken.jsp">
+<form action="classes-taken.jsp" method="POST">
   <td>
   <input name="s_id" placeholder="Enter Student Id" size="15"/>
   </td>
@@ -39,6 +39,9 @@
   </td>
   <td>
   <input name="grade" placeholder="Enter Grade" size="15"/>
+  </td>
+  <td>
+  <input type="submit" style="width:10em" value="Submit"/>
   </td>
   </form>
 </tr>
