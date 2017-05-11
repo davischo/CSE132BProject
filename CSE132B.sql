@@ -49,7 +49,7 @@ CREATE TABLE classes(
 CREATE TABLE sections(
   id          SERIAL PRIMARY KEY,
   sec_id      TEXT NOT NULL,
-  enr_limit   INTEGER NOT NULL,
+  enr_limit   INTEGER NOT NULL CHECK(enr_limit>0),
   class_id    INTEGER REFERENCES classes(class_id),
   taught_by   TEXT REFERENCES faculty(fac_name)
 );
@@ -123,19 +123,19 @@ CREATE TABLE prerequisites(
 );
 
 INSERT INTO students(first, middle, last, s_id, SSN, level, residency, college)
-    VALUES('test','jr','testingham','1','1','undergrad','resident','sixth');
+    VALUES('Test','jr','Testingham','1','A11111','Undergrad','International','Revelle');
 INSERT INTO departments( dept_name ) VALUES( 'CSE' );
 INSERT INTO departments( dept_name ) VALUES( 'ECE' );
 INSERT INTO faculty(fac_name, title, department) VALUES( 'Deutsch Alin','professor',1 );
 INSERT INTO faculty(fac_name, title, department) VALUES( 'Alvarado','professor',1 );
 INSERT INTO courses(course_name,department,lab,min_unit,max_unit,grad_opt,instr_cons)
-    VALUES( 'Back End Database',1,false,4,4,'both',false );
+    VALUES( 'CSE132B',1,false,4,4,'both',false );
 INSERT INTO courses(course_name,department,lab,min_unit,max_unit,grad_opt,instr_cons)
-    VALUES( 'Beginning Back End Database',1,false,4,8,'grade',false );
+    VALUES( 'CSE132A',1,false,4,8,'grade',false );
 INSERT INTO classes(course_name, title, quarter, year, scheduled_fac)
-    VALUES( 'Back End Database', 'CSE132B', 'SP',2017, 'Deutsch Alin' );
+    VALUES( 'CSE132B', 'Databases2', 'SP',2017, 'Deutsch Alin' );
 INSERT INTO classes(course_name, title, quarter, year, scheduled_fac)
-    VALUES( 'Beginning Back End Database', 'CSE132A', 'FA',2017, 'Deutsch Alin' );
+    VALUES( 'CSE132A', 'Database', 'FA',2017, 'Deutsch Alin' );
 INSERT INTO sections(sec_id, enr_limit, class_id, taught_by)
     VALUES( 'A01', 30, 1, 'Deutsch Alin');
 INSERT INTO sections(sec_id, enr_limit, class_id, taught_by)

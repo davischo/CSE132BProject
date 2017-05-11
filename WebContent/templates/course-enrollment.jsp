@@ -30,7 +30,7 @@ if(request.getParameter("nameSort")!=null && request.getParameter("nameSort")!="
 <table>
 <tr>
 <td>
-  <label>Search by Class:</label>
+  <label>Search by Course:</label>
   <form action="course-enrollment.jsp" method="POST">
 <% if( request.getParameter("nameSort")!= null && request.getParameter("nameSort")!="" ){
 %>
@@ -81,7 +81,7 @@ if(request.getParameter("nameSort")!=null && request.getParameter("nameSort")!="
         	if( request.getParameter("nameSort")!=null && request.getParameter("nameSort")!="" ){
             	rs0 = st0.executeQuery("SELECT * FROM sections sec, classes class, courses crs, meetings mt WHERE " + 
             		"sec.class_id=class.class_id AND class.course_name=crs.course_name AND mt.sec_id=sec.id " + 
-            		"AND mt.type='lecture' AND title LIKE '%" + request.getParameter("nameSort") + "%'");
+            		"AND mt.type='lecture' AND class.course_name LIKE '%" + request.getParameter("nameSort") + "%'");
         	}
         	else{
         		rs0 = st0.executeQuery("SELECT * FROM sections sec, classes class, courses crs, meetings mt WHERE " + 
