@@ -11,7 +11,8 @@ if (failure != null) {
 }
 %>
 </head>
-
+</br>
+<a href="../index.jsp">Homepage </a>
 <body>
 
 <table border="1">
@@ -161,8 +162,8 @@ if (failure != null) {
                     
                     <!-- Get the student ID -->
                     <td>
-                        <input value="<%= rs.getString("ID") %>"
-                               name="ID" size="10">
+                        <input value="<%= rs.getString("s_id") %>"
+                               name="s_id" size="10">
                     </td>
                     
                     <!--   Get the SSN, which is a number -->

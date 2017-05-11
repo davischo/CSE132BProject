@@ -1,5 +1,6 @@
 <html>
 <head>
+<a href="../index.jsp">Homepage </a>
 </head>
 <%  
 String failure = (String) session.getAttribute("failure");
@@ -31,11 +32,9 @@ if (failure != null) {
            conn = DriverManager.getConnection(
                    "jdbc:postgresql://localhost/postgres?" +
                            "user=postgres&password=postgres");
-           String action = "";
-		    if(request.getParameter("action") != null) {
-    			action = request.getParameter("action");
-		    }
+           String action = request.getParameter("action");
 		    
+		  
     		//Check if an insertion is requested
     	   if (action != null && action.equals("insert")) {
 
@@ -73,7 +72,6 @@ if (failure != null) {
                  <th>Quarter</th>
                  <th>Year</th>
                  <th>Faculty Scheduled </th>
-                 <th>Sections</th>
              </tr>
              <tr>
                  <form action="class-entry.jsp" method="get">
@@ -83,7 +81,7 @@ if (failure != null) {
 	                    <select value="" name="course_name">                       
 	                        <% 
 	                            // Create the statement
-	                          
+	                            
 	                            Statement statementCourse = conn.createStatement();
 	                            ResultSet rss = statementCourse.executeQuery("SELECT course_name FROM courses");  
 	                            while(rss.next()){ 
@@ -99,7 +97,7 @@ if (failure != null) {
 	                  </th> 
 	                   
 	                  <th><input value="" name="title" required="true"></th>
-	                  
+	  
 	                  <th>
 	                  <select value="" name="quarter">
 	                  <option>FA</option>
@@ -128,24 +126,30 @@ if (failure != null) {
 	                             statementFac.close();
 	                         %>
 	                    </select>
-	                  </th>             
-	                 <th><a href="sections.jsp">Insert Here </a></th>         
+	                  </th>                   
                      <th><input type="submit" value="Insert"></th>
                  </form>
-             </tr>    
+  
         <%
         
-            
             // Create the statement
             Statement statement = conn.createStatement();
 
             // Use the created statement to SELECT
             // the student attributes FROM the Student table.
-            rs = statement.executeQuery
-                    ("SELECT * FROM classes");
-            
-        while (rs.next()) {
-        %>
+            rs = statement.executeQuery ("SELECT * FROM classes");
+        	String courseForm = "";  
+        	int classID = -1;
+            int classCounter = 0;
+            String classCounterName = null;
+        	while (rs.next()) {
+		       	classID = rs.getInt("class_id");
+				System.out.println(classID);
+				courseForm = "classID" + classID;
+				classCounter++;
+                classCounterName = "class_form"+classCounter;
+
+   		%>
  		<tr>
                 <form action="class-entry.jsp" method="get">
                     <input type="hidden" value="update" name="action">
@@ -174,10 +178,9 @@ if (failure != null) {
                 	</td>
          	
                 	<td>  
-                		<input value="<%=rs.getString("scheduled_fac")%>" name="<%=rs.getString("scheduled_fac")%>">
+                		<input value="<%=rs.getString("scheduled_fac")%>" 
+                		name="<%=rs.getString("scheduled_fac")%>">
                 	</td>
-
-                	<td>&nbsp</td> 
                 	
                     <!-- Update Button -->
                     <td>
@@ -187,18 +190,27 @@ if (failure != null) {
                  
                  <form action="class-entry.jsp" method="get">
                     <input type="hidden" value="delete" name="action">
+                    
                     <!-- Delete Button -->
                     <td>
                         <input type="submit" value="Delete">
-                    </td>
-                </form>
+                    </td>  
+                </form>	
+                <%
+
+                %>
+                <form id=<%=classCounterName%> action="sections-form.jsp" method="POST">
+                <td>
+	                <input type="hidden" name="action" value="order">
+	                <input type="hidden" name="classToAdd" value="<%=rs.getInt("class_id")%>">
+	                <a href="javascript:{}" onclick="document.getElementById('<%=classCounterName%>').submit();">Manage Sections</a>
+	            </td>
+	           </form>
+         </tr>
                 
-            </tr>                
-	      
-	      <!-- -------- Close Connection Code -------- -->
-      	  <%
-           }
-              // Close the ResultSet
+        	<% 
+        	}
+ 
               rs.close();
       		  
               // Close the Statement
@@ -208,14 +220,15 @@ if (failure != null) {
        
        }
        catch (SQLException sqle) { 
-               if (request.getParameter("action").equals("insert")) {
-                  session.setAttribute("failure", "Failed to insert ");
-                  response.sendRedirect("class-entry.jsp");
-              }      
+            if (request.getParameter("action").equals("insert")) {
+                  session.setAttribute("failure", "Failed to insert " + sqle.getMessage());
+                  response.sendRedirect("class-entry.jsp"); 
+              }     
        } 
        catch (Exception e) {
+    	   //e.printStackTrace();
        }
-      %> 
+  %>
          </table>
         </td>
     </tr>

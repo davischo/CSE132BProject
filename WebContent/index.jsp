@@ -7,22 +7,34 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h1>
-Welcome to CSE132B-Link
-</h1>
-<h3>Links to forms:</h3>
-<ul>
-  <li><a href="templates/class-entry.jsp">Class Entry</a><label>Jenny</label></li>
-  <li><a href="templates/student-entry.jsp">Student Entry</a><label>Jenny</label></li>
-  <li><a href="templates/classes-taken.jsp">Classes Taken</a><label>Davis</label></li>
-  <li><a href="templates/course-enrollment.jsp">Course Enrollment</a><label>Davis</label></li>
-  <li><a href="templates/course-entry.jsp">Course Entry</a><label>Jenny</label></li>
-  <li><a href="templates/degree-info-submit.jsp">Degree Info Submit</a>Davis</li>
-  <li><a href="templates/faculty-entry.jsp">Faculty-Entry</a><label>Jenny</label></li>
-  <li><a href="templates/probation-submit.jsp">Probation Submit</a>Davis</li>
-  <li><a href="templates/review-session-submit.jsp">Review Session Submit</a>Jenny</li>
-  <li><a href="templates/thesis-committee-submit.jsp">Thesis Committee Entry</a>Davis</li>
-</ul>
+<h> Welcome to our page </h>
+
+</br>
+<a href="./templates/student-entry.jsp">Student Entry Form </a>
+</br>
+<a href="./templates/course-entry.jsp">Course Entry Form </a>
+</br>
+<a href="./templates/class-entry.jsp">Class Entry Form </a>
+</br>
+<a href="./templates/class-taken.jsp">Class Taken Form </a>
+</br>
+<a href="./templates/course-enrollment.jsp">Course Enrollment Form </a>
+</br>
+<a href="./templates/degree-info-submit.jsp">Degree Info Submission Form </a>
+</br>
+<a href="./templates/faculty-entry.jsp">Faculty Entry Form </a>
+</br>
+<a href="./templates/prerequisites.jsp">Prerequisites Form </a>
+</br>
+<a href="./templates/review-session-submit.jsp">Review Session Submission Form </a>
+</br>
+<a href="./templates/sections-form.jsp">Section Management Form </a>
+</br>
+<a href="./templates/sections-form.jsp">Class Taken Form </a>
+</br>
+<a href="./templates/thesis-committee-submit.jsp">Thesis Committee Submission Form </a>
+</br>
 
 </body>
 </html>
+

@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <html>
 <body>
+<a href="../index.jsp">Homepage </a>
  <%  
 String failure = (String) session.getAttribute("failure");
 if (failure != null) {

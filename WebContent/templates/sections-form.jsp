@@ -1,5 +1,6 @@
 <html>
 <head>
+<a href="../index.jsp">Homepage </a>
 </head>
 <%  
 String failure = (String) session.getAttribute("failure");

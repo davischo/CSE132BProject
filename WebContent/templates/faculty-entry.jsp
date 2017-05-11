@@ -10,6 +10,7 @@ if (failure != null) {
     session.setAttribute("failure", null);
 }
 %>
+<a href="../index.jsp">Homepage </a>
 </head>
 <body>
 
