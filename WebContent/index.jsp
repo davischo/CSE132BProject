@@ -16,7 +16,7 @@
 </br>
 <a href="./templates/class-entry.jsp">Class Entry Form </a>
 </br>
-<a href="./templates/class-taken.jsp">Class Taken Form </a>
+<a href="./templates/classes-taken.jsp">Classes Taken Form </a>
 </br>
 <a href="./templates/course-enrollment.jsp">Course Enrollment Form </a>
 </br>
@@ -29,8 +29,6 @@
 <a href="./templates/review-session-submit.jsp">Review Session Submission Form </a>
 </br>
 <a href="./templates/sections-form.jsp">Section Management Form </a>
-</br>
-<a href="./templates/sections-form.jsp">Class Taken Form </a>
 </br>
 <a href="./templates/thesis-committee-submit.jsp">Thesis Committee Submission Form </a>
 </br>

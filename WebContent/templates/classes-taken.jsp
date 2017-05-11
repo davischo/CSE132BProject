@@ -7,6 +7,7 @@
 <title>Classes Taken Form</title>
 </head>
 <body>
+<a href="../index.jsp">Homepage </a>
 <h1 style="color:blue">Classes Taken Entry Form</h1>
 <%
 if(session.getAttribute("error")!=null){
@@ -83,7 +84,7 @@ if(session.getAttribute("error")!=null){
         	
         	if( request.getParameter("grade")!=null && !request.getParameter("grade").matches(".*[A-D,F,P,NP]*.")){
         		session.setAttribute("error","Please enter the correct grade option.");
-        		response.sendRedirect("http://localhost:8888/CSE132BFolder/templates/classes-taken.jsp");
+        		response.sendRedirect("classes-taken.jsp");
         		return;
         	}
         	
@@ -110,11 +111,11 @@ if(session.getAttribute("error")!=null){
         catch(SQLException e){
         	System.out.println( e.getSQLState() );
         	session.setAttribute("error","One or more input was invalid. Please try again");
-        	response.sendRedirect("http://localhost:8888/CSE132BFolder/templates/classes-taken.jsp");
+        	response.sendRedirect("classes-taken.jsp");
         }
         catch(NumberFormatException e){
         	session.setAttribute("error","Please make sure inputs are valid.");
-        	response.sendRedirect("http://localhost:8888/CSE132BFolder/templates/classes-taken.jsp");
+        	response.sendRedirect("classes-taken.jsp");
         }
         finally {
             // Release resources in a finally block in reverse-order of

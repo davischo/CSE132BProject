@@ -7,6 +7,7 @@
 <title>Degree Information Submission</title>
 </head>
 <body>
+<a href="../index.jsp">Homepage </a>
 <h1 style="color:blue">Degree Information Submission</h1>
 <%
 if(session.getAttribute("error")!=null){
@@ -93,7 +94,7 @@ if(session.getAttribute("error")!=null){
         catch(SQLException e){
         	System.out.println(e.getSQLState());
         	session.setAttribute("error", "One or more input was invalid. Please try again.");
-        	response.sendRedirect("http://localhost:8888/CSE132BFolder/templates/degree-info-submit.jsp");
+        	response.sendRedirect("degree-info-submit.jsp");
         }
         finally{
         	

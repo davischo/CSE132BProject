@@ -8,6 +8,7 @@
 </head>
 <body>
 <body>
+<a href="../index.jsp">Homepage </a>
 <h1 style="color:blue">Course Enrollment</h1>
 
 <%
@@ -161,7 +162,7 @@ if(request.getParameter("nameSort")!=null && request.getParameter("nameSort")!="
         catch(SQLException e){
         	System.out.println(e.getSQLState());
         	session.setAttribute("error","One or more input was invalid. Please try again");
-        	response.sendRedirect("http://localhost:8888/CSE132BFolder/templates/course-enrollment.jsp");
+        	response.sendRedirect("course-enrollment.jsp");
         	
         }
         finally{
