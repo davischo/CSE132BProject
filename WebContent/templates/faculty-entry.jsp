@@ -4,7 +4,6 @@
 String failure = (String) session.getAttribute("failure");
 
 if (failure != null) {
-	 System.out.println("Did it reload?");
 %>
     <p style="color:darkred"><%=failure%></p>
 <%
@@ -42,16 +41,15 @@ if (failure != null) {
              // Begin transaction
              conn.setAutoCommit(false);
              pstmt = conn.prepareStatement(
-                     "INSERT INTO faculty(first_name,last_name,title,department) VALUES (?,?, ?, ?)");
-             pstmt.setString(1, request.getParameter("first_name"));
-             pstmt.setString(2, request.getParameter("last_name"));
-             pstmt.setString(3, request.getParameter("title"));
+                     "INSERT INTO faculty(fac_name,title,department) VALUES (?,?, ?)");
+             pstmt.setString(1, request.getParameter("fac_name"));
+             pstmt.setString(2, request.getParameter("title"));
              String dep = request.getParameter("department");
              
 			 PreparedStatement pstmt1 = conn.prepareStatement("Select dept_id from departments where dept_name = ?");
  			 pstmt1.setString(1,dep);
  			 ResultSet set = pstmt1.executeQuery();
- 			 if(set.next()){pstmt.setInt(4,set.getInt("dept_id"));}
+ 			 if(set.next()){pstmt.setInt(3,set.getInt("dept_id"));}
              int rowCount = pstmt.executeUpdate();
              if (rowCount > 0) {
                	 System.out.println("Successfully insert");
@@ -70,19 +68,18 @@ if (failure != null) {
             }%>
                      
            	
-                 	<!-- Add an HTML table header row to format the results -->
+         <!-- Add an HTML table header row to format the results -->
          <table border="1">
              <tr>
-                 <th>First Name</th>
-                 <th>Last Name</th>
+                 <th>Faculty Name</th>
                  <th>Title</th>
                  <th>Department</th>
              </tr>
              <tr>
                  <form action="faculty-entry.jsp" method="get">
                      <input type="hidden" value="insert" name="action">
-                     <th><input value="" name="first_name" required="true"></th>
-                     <th><input value="" name="last_name" required="true"></th>
+                     <th><input value="" name="fac_name" required="true"></th>
+                     <!-- <th><input value="" name="last_name" required="true"></th> -->
                      
             		 <th>
                      <select id="title"required="required" name="title">
@@ -94,8 +91,7 @@ if (failure != null) {
                      </th>
                      
 	                 <th>
-	                    <select value="" name="department">
-	                                
+	                    <select value="" name="department">    
 	                        <% 
 	                            // Create the statement
 	                            Statement statementDept = conn.createStatement();
@@ -120,15 +116,15 @@ if (failure != null) {
                 <form action="faculty-entry.jsp" method="get">
                     <input type="hidden" value="update" name="action">
 
-                    <!-- Get the Course Name -->
+<%--                <!-- Get the Course Name -->
                       <td>
                         <input value="<%= rs.getString("first_name") %>"
                                name="name">
-                    </td>
+                    </td> --%>
                     
                     <td>
-                        <input value="<%= rs.getString("last_name") %>"
-                               name="name">
+                        <input value="<%= rs.getString("fac_name") %>"
+                               name="fac_name">
                     </td>
                     
                     <!-- Get title option -->
@@ -184,8 +180,9 @@ if (failure != null) {
               // Close the Connection
               conn.close();
           } catch (SQLException sqle) {
+        	  
               if (request.getParameter("action").equals("insert")) {
-                  session.setAttribute("failure", "Failed to insert" + sqle.getMessage());
+                  session.setAttribute("failure", "Failed to insert");
                   response.sendRedirect("faculty-entry.jsp");
               }    
           } catch (Exception e) {

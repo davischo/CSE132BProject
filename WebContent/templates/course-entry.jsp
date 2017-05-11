@@ -94,7 +94,7 @@ if (failure != null) {
                 <tr>
                     <form action="course-entry.jsp" method="get">
                     <input type="hidden" value="insert" name="action">
-                        <th><input value="" name="courseName" required="required"></th>
+                        <th><input value="" name="courseName" required="required" size="10"></th>
  
 	                    <th>
 	                    <select value="" name="department">
@@ -115,14 +115,14 @@ if (failure != null) {
 	                    </th>  
 	                        					
                         <th>
-                        <select id="lab" name="lab" required="required">
+                        <select id="lab" name="lab" required="required" size="1">
                         	<option>Yes</option>
                         	<option>No</option>
                         </select>
 						</th>
 						
-                        <th><input value="" name="min_unit" required="required"></th>
-                        <th><input value="" name="max_unit" required="required"></th>
+                        <th><input value="" name="min_unit" required="required" size="5"></th>
+                        <th><input value="" name="max_unit" required="required" size="5"></th>
                         
                         <th>
                         <select id="grad_opt" name="grad_opt" required="required">
@@ -133,7 +133,7 @@ if (failure != null) {
                         </th>
                      					
 						<th>
-                        <select id="inst_cons" name="instr_cons" required="required">
+                        <select id="inst_cons" name="instr_cons" required="required" size="1">
                         	<option>Yes</option>
                         	<option>No</option>
                         </select>
@@ -158,7 +158,7 @@ if (failure != null) {
                     <!-- Get the Course Name -->
                     <td>
                         <input value="<%= rs.getString("course_name") %>"
-                               name="name">
+                               name="name" size="10">
                     </td>
 
                     <!-- Get the Department NAME -->
@@ -186,19 +186,19 @@ if (failure != null) {
                     	if(rs.getBoolean("lab") == false) { 
                     		yes = "No";
                     	}%>
-                        <input value="<%=yes%>" name="lab">
+                        <input value="<%=yes%>" name="lab" size="5">
                     </td>
                     
                     <!-- Get min unit -->
                     <td>
                         <input value="<%= rs.getInt("min_unit") %>"
-                               name="min_unit">
+                               name="min_unit" size="5">
                     </td>
                     
                     <!-- Get max unit -->
                     <td>
                         <input value="<%= rs.getInt("max_unit") %>"
-                               name="max_unit">
+                               name="max_unit" size="5">
                     </td>
                     
                     <!--   Get the grade option -->
@@ -214,7 +214,7 @@ if (failure != null) {
                     	}%>
                      <!-- Get instructor-consent option -->
                     <td>
-                        <input value="<%=yes %>"  name="consent">
+                        <input value="<%=yes %>" name="consent" size="5">
                     </td>
                     
                    <td>
@@ -252,13 +252,11 @@ if (failure != null) {
               conn.close();
           }
           catch (SQLException sqle) {
-        	  System.out.println("Throw the exception in SQL");
               if (request.getParameter("action").equals("insert")) {
                   session.setAttribute("failure", "Failed to insert");
                   response.sendRedirect("course-entry.jsp");
               }  
           } catch (Exception e) {
-        	  System.out.println("Throw the exception in HERE");
           }
       %> 
          </table>
