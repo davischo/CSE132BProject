@@ -31,8 +31,11 @@ if (failure != null) {
            conn = DriverManager.getConnection(
                    "jdbc:postgresql://localhost/postgres?" +
                            "user=postgres&password=postgres");
-		 
-    		String action = request.getParameter("action");
+           String action = "";
+		    if(request.getParameter("action") != null) {
+    			action = request.getParameter("action");
+		    }
+		    
     		//Check if an insertion is requested
     	   if (action != null && action.equals("insert")) {
 
@@ -51,22 +54,8 @@ if (failure != null) {
 	            } catch(Exception e) {
 	            	pstmt.setInt(4,-1);
 	            }
-	            
-	            
-	            String name = request.getParameter("fac");
-	            String first = name.split(" ")[0];
-	            String last = name.split(" ")[1];
-	            
-	            PreparedStatement st = conn.prepareStatement("Select id from faculty where first_name = ? and last_name = ?");
-	            st.setString(1,first);
-	            st.setString(2,last);
-	            
-	            ResultSet r = st.executeQuery();
-	            
-	            if(r.next()) {pstmt.setInt(5, r.getInt("id"));}
-	            r.close(); 
-	            st.close();
-	            
+	            pstmt.setString(5,request.getParameter("fac_name"));
+	           
 	            int rowCount = pstmt.executeUpdate();
 	            if (rowCount > 0) {
 	            }
@@ -96,17 +85,15 @@ if (failure != null) {
 	                            // Create the statement
 	                          
 	                            Statement statementCourse = conn.createStatement();
-	                            ResultSet rss = statementCourse.executeQuery("SELECT course_name FROM courses");
-	                            
-	                                while(rss.next()){ 
-	                            
+	                            ResultSet rss = statementCourse.executeQuery("SELECT course_name FROM courses");  
+	                            while(rss.next()){ 
 	                                    %>
 	                                        <option value="<%=rss.getString("course_name")%>">
 	                                        <%=rss.getString("course_name")%> </option>
 	                                    <% 
-	                                }
-	                                rss.close();
-	                                statementCourse.close();
+	                            }
+                               rss.close();
+                               statementCourse.close();
 	                         %>
 	                      </select>
 	                  </th> 
@@ -115,30 +102,30 @@ if (failure != null) {
 	                  
 	                  <th>
 	                  <select value="" name="quarter">
-	                  <option>FALL</option>
-	                  <option>WINTER</option>
-	                  <option>SPRING</option>
+	                  <option>FA</option>
+	                  <option>WI</option>
+	                  <option>SP</option>
+	                  <option>SS1</option>
+	                  <option>SS2</option>
 	                  </select>
 	                  </th>
 	                  
 	                  <th><input required="true" type=number name="year" min="1960"/></th>
 	          	      <th>
-	                    <select value="" name="fac">              
+	                    <select value="" name="fac_name">              
 	                        <% 
 	                            // Create the statement
 	                            Statement statementFac = conn.createStatement();
-	                            ResultSet rsFac = statementFac.executeQuery("SELECT first_name,last_name FROM faculty");
-	                            String fac_name = ""; 
-	                            while(rsFac.next()){ 
-	                            		fac_name = rsFac.getString("first_name") + " " + rsFac.getString("last_name");
-	                            		
+	                            ResultSet rsFac = statementFac.executeQuery("SELECT fac_name FROM faculty");
+	                        
+	                            while(rsFac.next()){                          		
 	                                    %>
-	                                        <option value="<%=rsFac.getString("first_name") + " " + rsFac.getString("last_name")%>">
-	                                        <%=fac_name%></option>
+	                                        <option value="<%=rsFac.getString("fac_name")%>">
+	                                        <%=rsFac.getString("fac_name")%></option>
 	                                    <% 
-	                                }
-	                                rsFac.close();
-	                                statementFac.close();
+	                             }
+	                             rsFac.close();
+	                             statementFac.close();
 	                         %>
 	                    </select>
 	                  </th>             
@@ -157,7 +144,7 @@ if (failure != null) {
             rs = statement.executeQuery
                     ("SELECT * FROM classes");
             
-            while ( rs.next() ) {
+        while (rs.next()) {
         %>
  		<tr>
                 <form action="class-entry.jsp" method="get">
@@ -187,20 +174,10 @@ if (failure != null) {
                 	</td>
          	
                 	<td>  
-                	<%
-                	// Create the statement
-                    int facID = rs.getInt("scheduled_fac");
-        			PreparedStatement ps = conn.prepareStatement("Select first_name,last_name from faculty where id = ?");
-        			ps.setInt(1,facID);
-        			String facName = "";
-        			ResultSet s = ps.executeQuery();
-        			if(s.next()){
-        			 facName = s.getString("first_name") + " " + s.getString("last_name");}
-                	 %>       				
-                	 <input value="<%=facName%>" name="<%=facName%>">
+                		<input value="<%=rs.getString("scheduled_fac")%>" name="<%=rs.getString("scheduled_fac")%>">
                 	</td>
-                	
-                	<td><a href="sections.jsp">Insert Here </a></td> 
+
+                	<td>&nbsp</td> 
                 	
                     <!-- Update Button -->
                     <td>
@@ -217,12 +194,10 @@ if (failure != null) {
                 </form>
                 
             </tr>                
-	      <%
-	       }
-	      %> 
 	      
 	      <!-- -------- Close Connection Code -------- -->
       	  <%
+           }
               // Close the ResultSet
               rs.close();
       		  
@@ -230,14 +205,16 @@ if (failure != null) {
               pstmt.close();
               // Close the Connection
               conn.close();
-          } catch (SQLException sqle) { 
+       
+       }
+       catch (SQLException sqle) { 
                if (request.getParameter("action").equals("insert")) {
                   session.setAttribute("failure", "Failed to insert ");
                   response.sendRedirect("class-entry.jsp");
-              }     
-          } catch (Exception e) {
-
-          }
+              }      
+       } 
+       catch (Exception e) {
+       }
       %> 
          </table>
         </td>

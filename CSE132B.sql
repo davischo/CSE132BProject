@@ -34,6 +34,7 @@ CREATE TABLE faculty(
   title       TEXT NOT NULL,
   department  INTEGER REFERENCES departments(dept_id),
   Check(fac_name <> '')
+
 );
 
 CREATE TABLE classes(
@@ -41,8 +42,8 @@ CREATE TABLE classes(
   course_name   TEXT REFERENCES courses(course_name),
   title         TEXT NOT NULL CHECK (title <> ''),
   quarter       TEXT NOT NULL CHECK (quarter <> ''),
-  year          INTEGER NOT NULL CHECK(year>1960),
-  scheduled_fac TEXT REFERENCES faculty(fac_name)
+  year          INTEGER NOT NULL CHECK (year >= 1960),
+  scheduled_fac TEXT references faculty(fac_name) 
 );
 
 CREATE TABLE sections(
@@ -114,10 +115,11 @@ CREATE TABLE course_to_cat(
   cat         INTEGER REFERENCES categories(id)
 );
 
-CREATE TABLE prerequisistes(
+CREATE TABLE prerequisites(
   id          SERIAL PRIMARY KEY,
   course      TEXT REFERENCES courses(course_name),
-  pre         TEXT REFERENCES courses(course_name)
+  pre         TEXT REFERENCES courses(course_name),
+  CHECK ( course <> pre)
 );
 
 INSERT INTO students(first, middle, last, s_id, SSN, level, residency, college)
