@@ -1,48 +1,51 @@
-EATE TABLE courses (
+CREATE TABLE courses (
   id          SERIAL,
   course_name TEXT UNIQUE NOT NULL PRIMARY KEY,
+  department  INTEGER REFERENCES departments(dept_id)
   lab         BOOLEAN     NOT NULL,
   min_unit    INTEGER CHECK (min_unit > 0),
   max_unit    INTEGER CHECK (max_unit >= min_unit),
   grad_opt    TEXT NOT NULL,
   instr_cons  BOOLEAN NOT NULL
+  CHECK(course_name <> '')
 );
 
 CREATE TABLE students(
   id          SERIAL PRIMARY KEY,
-  first       TEXT NOT NULL,
+  first       TEXT NOT NULL CHECK (first <> ''),
   middle      TEXT,
-  last        TEXT NOT NULL,
-  s_id        INTEGER NOT NULL UNIQUE,
-  SSN         INTEGER NOT NULL UNIQUE,
-  residency   TEXT NOT NULL
+  last        TEXT NOT NULL CHECK (last <> ''),
+  s_id        TEXT NOT NULL UNIQUE CHECK (s_id <> ''),
+  SSN         INTEGER NOT NULL UNIQUE CHECK (SSN >= 0),
+  level       TEXT NOT NULL,
+  residency   TEXT NOT NULL,
+  college     TEXT
 );
 
 CREATE TABLE departments(
   dept_id     SERIAL PRIMARY KEY,
-  dept_name   TEXT NOT NULL UNIQUE
+  dept_name   TEXT NOT NULL UNIQUE,
+  CHECK (dept_name <> '')
 );
 
-CREATE TABLE categories(
-  id          SERIAL PRIMARY KEY,
-  name        TEXT UNIQUE NOT NULL
-);
-
-//Just testing
-INSERT INTO courses(course_name,lab,min_unit,max_unit,grad_opt,instr_cons) VALUES( 'random',true,1,1,'grade',true  );
 
 CREATE TABLE faculty(
-  id          SERIAL,
-  fac_name    TEXT NOT NULL UNIQUE PRIMARY KEY,
+  id          SERIAL PRIMARY KEY,
+  first_name   TEXT NOT NULL,
+  last_name   TEXT NOT NULL,
   title       TEXT NOT NULL,
-  department  INTEGER REFERENCES departments(dept_id)
+  department  INTEGER REFERENCES departments(dept_id),
+  Check(first_name <> ''),
+  Check(last_name <> '')
 );
 
 CREATE TABLE classes(
-  class_id    SERIAL PRIMARY KEY,
-  course_name TEXT REFERENCES courses(course_name),
-  title       TEXT NOT NULL,
-  term        TEXT NOT NULL
+  class_id      SERIAL PRIMARY KEY,
+  course_name   TEXT REFERENCES courses(course_name),
+  title         TEXT NOT NULL CHECK (title <> ''),
+  quarter       TEXT NOT NULL CHECK (quarter <> ''),
+  year          TEXT NOT NULL CHECK (year <> ''),
+  scheduled_fac TEXT references faculty(id) 
 );
 
 CREATE TABLE sections(
