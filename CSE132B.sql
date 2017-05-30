@@ -94,7 +94,7 @@ CREATE TABLE probations(
 CREATE TABLE degrees(
   id          SERIAL PRIMARY KEY,
   name        TEXT NOT NULL UNIQUE,
-  department  INTEGER REFERENCES departments(dept_id)
+  department  TEXT REFERENCES departments(dept_name)
 );
 
 CREATE TABLE categories(
@@ -123,7 +123,7 @@ CREATE TABLE prerequisites(
 );
 
 INSERT INTO students(first, middle, last, s_id, SSN, level, residency, college)
-    VALUES('Test','jr','Testingham','1','A11111','Undergrad','International','Revelle');
+    VALUES('Test','jr','Testingham','1','11111','Undergraduate','International','Revelle');
 INSERT INTO departments( dept_name ) VALUES( 'CSE' );
 INSERT INTO departments( dept_name ) VALUES( 'ECE' );
 INSERT INTO faculty(fac_name, title, department) VALUES( 'Deutsch Alin','professor',1 );
@@ -154,9 +154,9 @@ INSERT INTO meetings(type, weekly, mandatory, room, start_time, end_time, day, s
     VALUES( 'lecture',true,true,'CNTR119','11:00 pm','12:30 am', 'MON/WED', 4);
 
 INSERT INTO degrees(name, department)
-VALUES('B.S. Computer Science', 1);
+VALUES('B.S. Computer Science', 'CSE');
 INSERT INTO degrees(name, department)
-VALUES('B.S. Computer Engineering', 2);
+VALUES('B.S. Computer Engineering', 'ECE');
 
 INSERT INTO categories(name) VALUES('Upper Div');
 INSERT INTO categories(name) VALUES('Lower Div');

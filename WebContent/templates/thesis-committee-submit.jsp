@@ -45,7 +45,9 @@ if(session.getAttribute("error")!=null){
         <%
         Connection conn = null;
         PreparedStatement pstmt = null;
+        Statement st = null;
         ResultSet rs = null;
+        //Statement s3 = conn.createStatement();
 
         try {
         	//Registering Postgresql JDBC driver with teh DriverManager
@@ -54,15 +56,28 @@ if(session.getAttribute("error")!=null){
         	conn = DriverManager.getConnection(
         			"jdbc:postgresql://localhost:5432/postgres?" +
         			"user=postgres&password=postgres");
+        	//s3.executeQuery("SELECT * FROM students WHERE level ='' ");
         	if(request.getParameter("add-tc")!=null && request.getParameter("add-tc").equals("true")){
         		conn.setAutoCommit(false);
-        		pstmt = conn.prepareStatement("INSERT INTO thesis_committee(s_id,fac_name) VALUES(?,?)");
-        		pstmt.setInt(1,Integer.parseInt(request.getParameter("s_id")));
-        		pstmt.setString(2,request.getParameter("fac_name"));
-        		pstmt.execute();
+        		st = conn.createStatement();
+        		int id = Integer.parseInt(request.getParameter("s_id"));
+        		rs = st.executeQuery("SELECT level FROM students WHERE id=" + id);
+        		if(rs.next()){
+        			if(!rs.getString("level").equals("Undergraduate") ){
+                		pstmt = conn.prepareStatement("INSERT INTO thesis_committee(s_id,fac_name) VALUES(?,?)");
+                		pstmt.setInt(1, id);
+                		pstmt.setString(2,request.getParameter("fac_name"));
+                		pstmt.execute();
+                		pstmt.close();
+        			}
+        			else{
+        				session.setAttribute("error", "Student is an undergrad");
+        				response.sendRedirect("thesis-committee-submit.jsp");
+        				return;
+        			}
+        		}
         		conn.commit();
         		conn.setAutoCommit(true);
-        		pstmt.close();
             	conn.close();
         	}
         	
