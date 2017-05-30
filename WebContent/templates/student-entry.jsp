@@ -109,7 +109,8 @@ if (failure != null) {
                         <th>
                         <select id="level"required="required" name="level">
                         <option>Undergraduate</option>
-                        <option>Graduate</option>
+                        <option>MS</option>
+                        <option>PhD</option>
                         <option>BS/MS Program</option>
                         </select>
                         </th>
