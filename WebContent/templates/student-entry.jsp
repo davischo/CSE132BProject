@@ -109,15 +109,14 @@ if (failure != null) {
                         <th>
                         <select id="level"required="required" name="level">
                         <option>Undergraduate</option>
-                        <option>MS</option>
-                        <option>PhD</option>
+                        <option>Graduate</option>
                         <option>BS/MS Program</option>
                         </select>
                         </th>
                         <th>
                         <select id="residency" name="residency" required="required" name="state">
-                        <option>California Resident</option>
-                        <option>Non-California Resident</option>
+                        <option>California</option>
+                        <option>Non-California</option>
                         <option>International</option>
                         </select>
                         </th>

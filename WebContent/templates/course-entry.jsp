@@ -127,8 +127,8 @@ if (failure != null) {
                         
                         <th>
                         <select id="grad_opt" name="grad_opt" required="required">
-                        	<option>Letter Grade</option>
-                        	<option>Pass/No Pass</option>
+                        	<option>Letter</option>
+                        	<option>PNP</option>
                         	<option>Both</option>
                         </select>
                         </th>

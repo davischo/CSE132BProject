@@ -60,9 +60,7 @@ CREATE TABLE meetings(
   weekly      BOOLEAN NOT NULL,
   mandatory   BOOLEAN NOT NULL,
   room        TEXT NOT NULL,
-  start_time  TEXT NOT NULL,
-  end_time    TEXT NOT NULL,
-  day         TEXT NOT NULL,
+  day_time    TEXT NOT NULL,
   sec_id      INTEGER REFERENCES sections(id)
 );
 
@@ -94,7 +92,15 @@ CREATE TABLE probations(
 CREATE TABLE degrees(
   id          SERIAL PRIMARY KEY,
   name        TEXT NOT NULL UNIQUE,
-  department  TEXT REFERENCES departments(dept_name)
+  department  TEXT REFERENCES departments(dept_name),
+  type        TEXT NOT NULL
+);
+
+--ADDED THIS RECENTLY
+CREATE TABLE students_to_degrees(
+  s_id        INTEGER REFERENCES students(id),
+  d_id        INTEGER REFERENCES degrees(id),
+  completed   TEXT NOT NULL
 );
 
 CREATE TABLE categories(
@@ -122,42 +128,4 @@ CREATE TABLE prerequisites(
   CHECK ( course <> pre)
 );
 
-INSERT INTO students(first, middle, last, s_id, SSN, level, residency, college)
-    VALUES('Test','jr','Testingham','1','11111','Undergraduate','International','Revelle');
-INSERT INTO departments( dept_name ) VALUES( 'CSE' );
-INSERT INTO departments( dept_name ) VALUES( 'ECE' );
-INSERT INTO faculty(fac_name, title, department) VALUES( 'Deutsch Alin','professor',1 );
-INSERT INTO faculty(fac_name, title, department) VALUES( 'Alvarado','professor',1 );
-INSERT INTO courses(course_name,department,lab,min_unit,max_unit,grad_opt,instr_cons)
-    VALUES( 'CSE132B',1,false,4,4,'both',false );
-INSERT INTO courses(course_name,department,lab,min_unit,max_unit,grad_opt,instr_cons)
-    VALUES( 'CSE132A',1,false,4,8,'grade',false );
-INSERT INTO classes(course_name, title, quarter, year, scheduled_fac)
-    VALUES( 'CSE132B', 'Databases2', 'SP',2017, 'Deutsch Alin' );
-INSERT INTO classes(course_name, title, quarter, year, scheduled_fac)
-    VALUES( 'CSE132A', 'Database', 'FA',2017, 'Deutsch Alin' );
-INSERT INTO sections(sec_id, enr_limit, class_id, taught_by)
-    VALUES( 'A01', 30, 1, 'Deutsch Alin');
-INSERT INTO sections(sec_id, enr_limit, class_id, taught_by)
-    VALUES( 'A02', 30, 1, 'Deutsch Alin');
-INSERT INTO sections(sec_id, enr_limit, class_id, taught_by)
-    VALUES( 'A01', 30, 2, 'Deutsch Alin');
-INSERT INTO sections(sec_id, enr_limit, class_id, taught_by)
-    VALUES( 'A02', 30, 2, 'Deutsch Alin');
-INSERT INTO meetings(type, weekly, mandatory, room, start_time, end_time, day, sec_id)
-    VALUES( 'lecture',true,true,'CSB3','11:00 am','12:30 pm', 'TUES/THURS', 1);
-INSERT INTO meetings(type, weekly, mandatory, room, start_time, end_time, day, sec_id)
-    VALUES( 'lecture',true,true,'CSB3','11:00 am','12:30 pm', 'MON/WED', 2);
-INSERT INTO meetings(type, weekly, mandatory, room, start_time, end_time, day, sec_id)
-    VALUES( 'lecture',true,true,'CNTR119','11:00 pm','12:30 am', 'TUES/THURS', 3);
-INSERT INTO meetings(type, weekly, mandatory, room, start_time, end_time, day, sec_id)
-    VALUES( 'lecture',true,true,'CNTR119','11:00 pm','12:30 am', 'MON/WED', 4);
-
-INSERT INTO degrees(name, department)
-VALUES('B.S. Computer Science', 'CSE');
-INSERT INTO degrees(name, department)
-VALUES('B.S. Computer Engineering', 'ECE');
-
-INSERT INTO categories(name) VALUES('Upper Div');
-INSERT INTO categories(name) VALUES('Lower Div');
 
