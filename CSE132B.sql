@@ -65,7 +65,7 @@ CREATE TABLE meetings(
 );
 
 CREATE TABLE enrollment(
-  s_id        TEXT REFERENCES students(s_id),
+  s_id        INTEGER REFERENCES students(id),
   class_id    INTEGER REFERENCES classes(class_id),
   sec         INTEGER REFERENCES sections(id),
   quarter     TEXT NOT NULL CHECK (quarter <> ''),
