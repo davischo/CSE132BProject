@@ -369,12 +369,6 @@ values(15,51,44,'SP',2017,4,'Letter');
 -- and cs.quarter='FA' and cs.year = 2015
 -- and cs.class_id = s.class_id
 
-Select s.id as sid, first,middle,last from students s,
-			enrollment e where e.quarter = 'SP' and e.year = 2017 and e.s_id = s.id;
-
-select * FROM students s, enrollment e, sections s, meetings m1, meetings m2
-where
-
 --Get all currently enrolled sections and times for each student
   SELECT first, last, SSN, sec.sec_id, m.type, m.day_time FROM students s, enrollment e, sections sec, meetings m, classes c
   WHERE s.id=e.s_id AND e.sec=sec.id AND m.sec_id=sec.id AND sec.class_id=c.class_id AND c.quarter='SP' AND c.year=2017;
