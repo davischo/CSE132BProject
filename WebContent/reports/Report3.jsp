@@ -69,13 +69,59 @@ try{
 					"SELECT count(*) AS sum FROM enrollment e, sections sec, classes c " +
 					"WHERE e.class_id=c.class_id AND sec.class_id=c.class_id AND e.grade LIKE 'A%' " +
 					"AND sec.taught_by='"+request.getParameter("fac_name")+"' AND c.year=" + 
-					request.getParameter("year") + " AND c.quarter=" + request.getParameter("quarter");
+					request.getParameter("year") + " AND c.quarter='" + request.getParameter("quarter") +"'";
 			statement=conn.createStatement();
-			System.out.println("HERE1");
 			ResultSet ar = statement.executeQuery(q);
-			System.out.println("HERE2");
-			ar.next();
+			int a = 0;
+			if(ar.next()){
+				a=ar.getInt("sum");
+			}
+			q = 
+					"SELECT count(*) AS sum FROM enrollment e, sections sec, classes c " +
+					"WHERE e.class_id=c.class_id AND sec.class_id=c.class_id AND e.grade LIKE 'B%' " +
+					"AND sec.taught_by='"+request.getParameter("fac_name")+"' AND c.year=" + 
+					request.getParameter("year") + " AND c.quarter='" + request.getParameter("quarter") +"'";
+			statement=conn.createStatement();
+			ResultSet br = statement.executeQuery(q);
+			int b = 0;
+			if(br.next()){
+				b=br.getInt("sum");
+			}
+			q = 
+					"SELECT count(*) AS sum FROM enrollment e, sections sec, classes c " +
+					"WHERE e.class_id=c.class_id AND sec.class_id=c.class_id AND e.grade LIKE 'C%' " +
+					"AND sec.taught_by='"+request.getParameter("fac_name")+"' AND c.year=" + 
+					request.getParameter("year") + " AND c.quarter='" + request.getParameter("quarter") +"'";
+			statement=conn.createStatement();
+			ResultSet cr = statement.executeQuery(q);
+			int c = 0;
+			if(cr.next()){
+				c=cr.getInt("sum");
+			}
+			q = 
+					"SELECT count(*) AS sum FROM enrollment e, sections sec, classes c " +
+					"WHERE e.class_id=c.class_id AND sec.class_id=c.class_id AND e.grade LIKE 'D%' " +
+					"AND sec.taught_by='"+request.getParameter("fac_name")+"' AND c.year=" + 
+					request.getParameter("year") + " AND c.quarter='" + request.getParameter("quarter") +"'";
+			statement=conn.createStatement();
+			ResultSet dr = statement.executeQuery(q);
+			int d = 0;
+			if(dr.next()){
+				d=dr.getInt("sum");
+			}
+			q = 
+					"SELECT count(*) AS sum FROM enrollment e, sections sec, classes c " +
+					"WHERE e.class_id=c.class_id AND sec.class_id=c.class_id AND e.grade LIKE 'F%' " +
+					"AND sec.taught_by='"+request.getParameter("fac_name")+"' AND c.year=" + 
+					request.getParameter("year") + " AND c.quarter='" + request.getParameter("quarter") +"'";
+			statement=conn.createStatement();
+			ResultSet fr = statement.executeQuery(q);
+			int f = 0;
+			if(fr.next()){
+				f=fr.getInt("sum");
+			}
 			%>
+			
 			<h3>Grade Count</h3>
 			<table border="1">
 			<tr>
@@ -85,7 +131,13 @@ try{
 			<td>D</td>
 			<td>Other</td>
 			</tr>
-			<tr><%=ar.getInt("a") %></tr>
+			<tr>
+			<td><%=a %></td>
+			<td><%=b %></td>
+			<td><%=c %></td>
+			<td><%=d %></td>
+			<td><%=f %></td>
+			</tr>
 			</table>
 			<%
 		}
