@@ -27,7 +27,7 @@ try{
 	 
 	String action = request.getParameter("action");
 	statement = conn.createStatement();
-	rs = statement.executeQuery("Select s.id as sid, first,middle,last from students s, " +
+	rs = statement.executeQuery("Select distinct s.id as sid, first,middle,last from students s, " +
 			"enrollment e where e.quarter = 'SP' and e.year = 2017 and e.s_id = s.id"); 	
 %>
 <form action="Report1A.jsp" method="post">

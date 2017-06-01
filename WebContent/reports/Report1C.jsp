@@ -45,6 +45,7 @@ while(rs.next()){
 </select>
 <input type="submit" value="Submit">
 </form>
+
 <%if (request.getParameter("action").equals("pick") && action != null){
 %> 	
 <table cellspacing="5">

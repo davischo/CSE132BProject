@@ -362,6 +362,74 @@ values(14,44,38,'SP',2017,4,'Letter');
 insert into enrollment(s_id,class_id, sec, quarter, year, units, grade_opt)
 values(15,51,44,'SP',2017,4,'Letter');
 
+-- NEW STUFF I ENTER 
+insert into departments(dept_name) values('BUSINESS');
+#INSERTING DEGREES (Note to self: change degrees name into NOT UNIQUE, could be CS BS and CS MS)
+Insert into degrees(name,department,type,totalU,lowerDiv,upperDiv,techElec,gradUnits) values('COMPUTER SCIENCE', 1, 'B.S',40,10,15,15,0);
+Insert into degrees(name,department, type,totalU,lowerDiv,upperDiv,techElec,gradUnits) values('PHILOSOPHY', 3, 'B.A', 35,15,20,0,0);
+Insert into degrees(name,department, type,totalU,lowerDiv,upperDiv,techElec,gradUnits) values('MECHANICAL ENGINEERING', 2,'B.S',50,20,20,10,0);
+Insert into degrees(name,department, type,totalU,lowerDiv,upperDiv,techElec,gradUnits) values('COMPUTER SCIENCE', 1, 'M.S',45,0,0,0,45);
+Insert into degrees(name,department, type,totalU,lowerDiv,upperDiv,techElec,gradUnits) values('MBA', 4, 'M.S',45,0,0,0,45);
+
+#STUDENT - DEGREE
+#INSERTING MAJOR FOR EACH CUSTOMER
+insert into students_to_degrees(s_id, d_id, completed) values(1,1,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(2,1,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(3,1,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(4,1,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(5,1,'N');
+
+insert into students_to_degrees(s_id, d_id, completed) values(6,3,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(7,3,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(8,3,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(9,3,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(10,3,'N');
+
+insert into students_to_degrees(s_id, d_id, completed) values(11,2,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(12,2,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(13,2,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(14,2,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(15,2,'N');
+
+insert into students_to_degrees(s_id, d_id, completed) values(16,4,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(17,4,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(18,4,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(19,4,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(20,4,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(21,4,'N');
+insert into students_to_degrees(s_id, d_id, completed) values(22,4,'N')
+
+-- INSERT COURSE TO CATEGORIES
+insert into course_to_cat(course,isLD,isUD,isTechE,isGrad) values('CSE8A',true,false,false,false);
+insert into course_to_cat(course,isLD,isUD,isTechE,isGrad) values('CSE105',false,true,true,false);
+insert into course_to_cat(course,isLD,isUD,isTechE,isGrad) values('CSE123',false,true,false,false);
+insert into course_to_cat(course,isLD,isUD,isTechE,isGrad) values('CSE250A',false,false,true,true);
+insert into course_to_cat(course,isLD,isUD,isTechE,isGrad) values('CSE250B',false,false,false,true);
+insert into course_to_cat(course,isLD,isUD,isTechE,isGrad) values('CSE255',false,false,false,true);
+insert into course_to_cat(course,isLD,isUD,isTechE,isGrad) values('CSE232A',false,false,false,true);
+insert into course_to_cat(course,isLD,isUD,isTechE,isGrad) values('CSE221',false,false,true,true);
+insert into course_to_cat(course,isLD,isUD,isTechE,isGrad) values('MAE3',true,false,true,false);
+insert into course_to_cat(course,isLD,isUD,isTechE,isGrad) values('MAE107',false,true,true,false);
+insert into course_to_cat(course,isLD,isUD,isTechE,isGrad) values('PHIL10',true,false,false,false);
+insert into course_to_cat(course,isLD,isUD,isTechE,isGrad) values('PHIL12',true,false,false,false);
+insert into course_to_cat(course,isLD,isUD,isTechE,isGrad) values('PHIL165',false,true,false,false);
+insert into course_to_cat(course,isLD,isUD,isTechE,isGrad) values('PHIL167',false,true,false,false);
+insert into course_to_cat(course,isLD,isUD,isTechE,isGrad) values('MAE108',false,true,false,false);
+
+
+-- CONCENTRATION
+insert into concentration(name,minGPA,units,did) values('Databases',3.0,4,1);
+insert into concentration(name,minGPA,units,did) values('AI',3.1,8,1);
+insert into concentration(name,minGPA,units,did) values('Systems',3.3,4,1);
+insert into concentration(name,minGPA,units,did) values('Statistics',3.5,4,3);
+insert into concentration(name,minGPA,units,did) values('Aerospace',3.4,4,3);
+
+#INSERT INTO CON_TO_COURSE
+insert into con_to_course(con,course) values(1,'CSE232A');
+insert into con_to_course(con,course) values(2,'CSE255');
+insert into con_to_course(con,course) values(2,'CSE250A');
+insert into con_to_course(con,course) values(3,'CSE221')
+
 --QUERY USED FOR ENROLLMENT
 -- select st.id, cs.course_name,cs.class_id, sec_id
 -- from students st, classes cs, sections s
@@ -408,20 +476,17 @@ SELECT m.day_time FROM students s, enrollment e, sections sec, meetings m, class
 WHERE s.id=e.s_id AND e.sec=sec.id AND m.sec_id=sec.id AND sec.class_id=c.class_id AND c.quarter='SP' AND c.year=2017 AND s.SSN=9
     */
 
-create table GRADE_CONVERSION( 
-	LETTER_GRADE CHAR(2) NOT NULL,
-	NUMBER_GRADE DECIMAL(2,1)
-	);
-insert into grade_conversion values('A+', 4.3);
-insert into grade_conversion values('A', 4);
+insert into grade_conversion values('A+', 4.0);
+insert into grade_conversion values('A', 4.0);
 insert into grade_conversion values('A-', 3.7);
-insert into grade_conversion values('B+', 3.4);
-insert into grade_conversion values('B', 3.1);
-insert into grade_conversion values('B-', 2.8);
-insert into grade_conversion values('C+', 2.5);
-insert into grade_conversion values('C', 2.2);
-insert into grade_conversion values('C-', 1.9);
-insert into grade_conversion values('D', 1.6); 
+insert into grade_conversion values('B+', 3.3);
+insert into grade_conversion values('B', 3.0);
+insert into grade_conversion values('B-', 2.7);
+insert into grade_conversion values('C+', 2.3);
+insert into grade_conversion values('C', 2.0);
+insert into grade_conversion values('C-', 1.7);
+insert into grade_conversion values('D', 1.0);
+insert into grade_conversion values('F', 0.0);
 
 SELECT count(*) FROM enrollment e, sections sec, classes c
 WHERE e.class_id=c.class_id AND sec.class_id=c.class_id AND e.grade LIKE 'A%'
