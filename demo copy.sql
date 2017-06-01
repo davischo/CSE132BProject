@@ -369,6 +369,27 @@ values(15,51,44,'SP',2017,4,'Letter');
 -- and cs.quarter='FA' and cs.year = 2015
 -- and cs.class_id = s.class_id
 
---Get all currently enrolled sections and times for each student
-  SELECT first, last, SSN, sec.sec_id, m.type, m.day_time FROM students s, enrollment e, sections sec, meetings m, classes c
-  WHERE s.id=e.s_id AND e.sec=sec.id AND m.sec_id=sec.id AND sec.class_id=c.class_id AND c.quarter='SP' AND c.year=2017;
+/*
+--Get all currently enrolled classes and sections and times for specified student
+  SELECT c.class_id, c.course_name, sec.sec_id, m.type, m.day_time FROM students s, enrollment e, sections sec, meetings m, classes c
+  WHERE s.id=e.s_id AND e.sec=sec.id AND m.sec_id=sec.id AND sec.class_id=c.class_id AND c.quarter='SP' AND c.year=2017 AND s.SSN=9
+
+--Get all current sections student is not enrolled in
+    SELECT
+      c.class_id,
+      c.course_name,
+      sec.sec_id,
+      m.day_time,
+      c.title
+    FROM classes c, sections sec, meetings m
+    WHERE c.class_id = sec.class_id AND m.sec_id = sec.id AND
+          c.quarter = 'SP' AND c.year = 2017 AND
+          c.course_name NOT IN
+          (SELECT c.course_name
+           FROM students s, enrollment e, sections sec, meetings m, classes c
+           WHERE
+             s.id = e.s_id AND e.sec = sec.id AND m.sec_id = sec.id AND sec.class_id = c.class_id AND c.quarter = 'SP'
+             AND c.year = 2017 AND s.SSN = 9)
+    ORDER BY c.class_id;
+
+*/
