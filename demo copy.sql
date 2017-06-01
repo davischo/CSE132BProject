@@ -392,4 +392,38 @@ values(15,51,44,'SP',2017,4,'Letter');
              AND c.year = 2017 AND s.SSN = 9)
     ORDER BY c.class_id;
 
-*/
+--Get all students of select section
+SELECT c.class_id, c.course_name, sec.sec_id, m.type, m.day_time, s.id AS s_id FROM students s, enrollment e, sections sec, meetings m, classes c
+WHERE s.id=e.s_id AND e.sec=sec.id AND m.sec_id=sec.id AND sec.class_id=c.class_id AND c.quarter='SP' AND c.year=2017 AND sec.sec_id='1';
+
+--Get all unavailable times for a given section
+WITH enrolled AS (
+  SELECT s.SSN FROM students s, enrollment e, sections sec, classes c
+  WHERE s.id=e.s_id AND e.sec=sec.id AND sec.class_id=c.class_id AND c.quarter='SP' AND c.year=2017 AND sec.sec_id='10')
+  SELECT m.day_time FROM students s, enrollment e, sections sec, meetings m, classes c, enrolled
+  WHERE s.id=e.s_id AND e.sec=sec.id AND m.sec_id=sec.id AND sec.class_id=c.class_id AND c.quarter='SP' AND c.year=2017 AND s.SSN=enrolled.SSN;
+
+--Get all unavailable times
+SELECT m.day_time FROM students s, enrollment e, sections sec, meetings m, classes c
+WHERE s.id=e.s_id AND e.sec=sec.id AND m.sec_id=sec.id AND sec.class_id=c.class_id AND c.quarter='SP' AND c.year=2017 AND s.SSN=9
+    */
+
+create table GRADE_CONVERSION( 
+	LETTER_GRADE CHAR(2) NOT NULL,
+	NUMBER_GRADE DECIMAL(2,1)
+	);
+insert into grade_conversion values('A+', 4.3);
+insert into grade_conversion values('A', 4);
+insert into grade_conversion values('A-', 3.7);
+insert into grade_conversion values('B+', 3.4);
+insert into grade_conversion values('B', 3.1);
+insert into grade_conversion values('B-', 2.8);
+insert into grade_conversion values('C+', 2.5);
+insert into grade_conversion values('C', 2.2);
+insert into grade_conversion values('C-', 1.9);
+insert into grade_conversion values('D', 1.6); 
+
+SELECT count(*) FROM enrollment e, sections sec, classes c
+WHERE e.class_id=c.class_id AND sec.class_id=c.class_id AND e.grade LIKE 'A%'
+AND sec.taught_by=? AND c.year=? AND c.quarter=?;
+
