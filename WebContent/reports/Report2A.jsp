@@ -90,7 +90,7 @@ try{
 		int ssn = Integer.parseInt(request.getParameter("ssn"));
 		//Get all currently enrolled sections and times for specified student
 		String sql = 
-				"SELECT c.class_id, c.course_name, sec.sec_id, m.type, m.day_time FROM students s, enrollment e, sections sec, meetings m, classes c " +
+				"SELECT c.class_id, c.course_name, c.title, sec.sec_id, m.type, m.day_time FROM students s, enrollment e, sections sec, meetings m, classes c " +
 					"WHERE s.id=e.s_id AND e.sec=sec.id AND m.sec_id=sec.id AND sec.class_id=c.class_id " +
 					"AND c.quarter='SP' AND c.year=2017 AND s.SSN=?";
 		ps = conn.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,
@@ -115,6 +115,8 @@ try{
 		<tr>
 		<td>Class Title</td>
 		<td>Course Name</td>
+		<td>Your Class</td>
+		<td>Your Course</td>
 		</tr>
 		<%
 		String[] curr = null;
@@ -122,7 +124,7 @@ try{
 		int lastClass = 0;
 		boolean last_cant = false;
 		boolean this_cant = false;
-		String a="",b="",c="";
+		String a="",b="",c="",d="";
 		int i,j;
 		while(rs2.next()){
 			currClass = rs2.getInt("class_id");
@@ -133,6 +135,8 @@ try{
 				<tr>
 				<td><%=a%></td>
 				<td><%=b%></td> 
+				<td><%=c%></td> 
+				<td><%=d%></td> 
 				</tr>
 				<%
 			}
@@ -149,6 +153,8 @@ try{
 							//A conflict, same time and day is found	
 							System.out.println("FOUND CONFLICT");
 							this_cant = true;
+							c=rs.getString("title");
+							d=rs.getString("course_name");
 						}
 					}
 				}
@@ -168,7 +174,9 @@ try{
 			%>
 			<tr>
 			<td><%=a%></td>
-			<td><%=b%></td> 
+			<td><%=b%></td>
+			<td><%=c%></td> 
+			<td><%=d%></td>  
 			</tr>
 			<%
 		}
