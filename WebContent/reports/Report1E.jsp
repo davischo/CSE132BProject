@@ -131,7 +131,7 @@ if(action != null && action.equals("report")){
 			" From con_to_course ctc left outer join coursesTaken ct on ct.course_name = ctc.course " +
 			 " left outer join grade_conversion g" +
 			" on g.letter_grade = ct.grade, concentration con" +
-			" where con.id = ctc.con ) AS D" ;
+			" where con.id = ctc.con ) AS D order by D.con" ;
 	
 	String sql1 =  "WITH coursesTaken AS " +
 			"(Select A.course_name, B.units, B.grade " +
