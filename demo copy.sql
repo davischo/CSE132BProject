@@ -639,3 +639,9 @@ insert into con_to_course(con,course) values(1,'CSE232A');
 insert into con_to_course(con,course) values(2,'CSE255');
 insert into con_to_course(con,course) values(2,'CSE250A');
 insert into con_to_course(con,course) values(3,'CSE221');
+
+/*
+insert into con_to_course(con,course) values(2,'CSE105');
+Insert into classes (course_name,title,quarter,year)
+values('CSE105','Theory', 'FA',2017)
+*/

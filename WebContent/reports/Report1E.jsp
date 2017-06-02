@@ -116,6 +116,7 @@ if(rss.next() && rrs.next()){
 if(action != null && action.equals("report")){
 	int sid = Integer.parseInt(request.getParameter("sid"));
 	int did = Integer.parseInt(request.getParameter("did"));
+	System.out.print(did);
 
 	String sql =
 			"Select D.name as name, D.require as require, D.grad, D.minGPA " +
@@ -125,15 +126,12 @@ if(action != null && action.equals("report")){
 			 "      from courses cs join classes c on cs.course_name = c.course_name) AS A join " +
 			 "	   (Select s.id as sid,class_id, units,grade  " +
 			 "      from enrollment e join students s on e.s_id = s.id and s.level ='MS'  " +
-			  "     and grade != 'In Progress' and s.id = " + sid + ") AS B on A.class_id = B.class_id) "  +
+			  "     and grade != 'IN PROGRESS' and s.id = " + sid + ") AS B on A.class_id = B.class_id) "  +
 			" Select con.name as name,ctc.con, ctc.course as require, ct.course_name, ct.units, g.NUMBER_GRADE as grad, con.minGPA as minGPA, con.units " +
 			" From con_to_course ctc left outer join coursesTaken ct on ct.course_name = ctc.course " +
 			 " left outer join grade_conversion g" +
 			" on g.letter_grade = ct.grade, concentration con" +
 			" where con.id = ctc.con ) AS D" ;
-
-			
-	
 	
 	String sql1 =  "WITH coursesTaken AS " +
 			"(Select A.course_name, B.units, B.grade " +
@@ -141,7 +139,7 @@ if(action != null && action.equals("report")){
 					       "from courses cs join classes c on cs.course_name = c.course_name) AS A join " +
 					 	   "(Select s.id as sid,class_id, units,grade  " +
 					       "from enrollment e join students s on e.s_id = s.id and s.level ='MS' " +
-					       "and grade != 'In Progress' and s.id = " +sid+ ") AS B on A.class_id = B.class_id) " +
+					       "and grade != 'IN PROGRESS' and s.id = " +sid+ ") AS B on A.class_id = B.class_id) " +
 					"Select ctc.con, ctc.course as require, ct.course_name, ct.units, g.NUMBER_GRADE as grad "+
 					"From con_to_course ctc left outer join coursesTaken ct on ct.course_name = ctc.course " +
 					 "left outer join grade_conversion g " +
@@ -149,7 +147,7 @@ if(action != null && action.equals("report")){
 					"where con.id = ctc.con and con.id = ? ";
 	
 	Statement stt = conn.createStatement();
-	ResultSet set = stt.executeQuery("select id, name,units,minGPA from concentration where did = " + did + "order by id");
+	ResultSet set = stt.executeQuery("select id, name,units,minGPA from concentration where did = " + did);
 	String conName = null;
 	Map<String,Double> concentrationGPA = new HashMap<String,Double>();
 	ArrayList<String> unfinishedConcentration  = new ArrayList<String>();
@@ -158,6 +156,7 @@ if(action != null && action.equals("report")){
 
 	while(set.next()){
 		int conid = set.getInt("id");
+		System.out.print("In side of set.next()" + conid);
 		conName = set.getString("name");
 		ps = conn.prepareStatement(sql1);
 		ps.setInt(1,conid);
@@ -171,8 +170,10 @@ if(action != null && action.equals("report")){
 		concentration.add(conName);
 		int count = 0;
 		while(rec.next()){
+			System.out.println("In side of rec " + conName);
 			if(rec.getString("course_name") == null){
-				if(!unfinishedConcentration.contains(conName)){
+				if(!unfinishedConcentration.contains(conName) && !finishedConcentration.contains(conName)){
+					System.out.println("In side of rec ADDING TO unfinished " + conName);
 					unfinishedConcentration.add(conName);
 				}
 	
@@ -186,23 +187,32 @@ if(action != null && action.equals("report")){
 			}
 		}
 		
-		if ((sunit < totalUnits) &&!unfinishedConcentration.contains(conName)){
+		if(sunit >= totalUnits && (sungpa/count) >= minGPA && !finishedConcentration.contains(conName)){
+			System.out.println("In side of ADDING FINISHING CONCENTRATION " + conName);
+			finishedConcentration.add(conName);
+		}
+		
+		if ((sunit < totalUnits) && !unfinishedConcentration.contains(conName)&& !finishedConcentration.contains(conName)){
 				unfinishedConcentration.add(conName);
 		}
 
-		if(((sungpa/count) < minGPA) &&!unfinishedConcentration.contains(conName)){
+		if(((sungpa/count) < minGPA) &&!unfinishedConcentration.contains(conName) && !finishedConcentration.contains(conName)){
 				unfinishedConcentration.add(conName);		
 	    } 
 		
+
 		concentrationGPA.put(conName,(double)(sungpa/count));
+		System.out.println(conName);
 		
 	} 
 		
 	for(String hi:concentration){
-		if(!unfinishedConcentration.contains(hi)){
-			finishedConcentration.add(hi);
+		if(finishedConcentration.contains(hi) && unfinishedConcentration.contains(hi)){
+			System.out.println("In side of REMOVING FROM unfinished " + conName);
+			int i = unfinishedConcentration.indexOf(hi);
+			unfinishedConcentration.remove(i);
 		}
-	}
+	} 
 	%>
 	<h2> Unfinished Concentration : </h2>
 	<%for(String hi:unfinishedConcentration){ %>
@@ -235,11 +245,12 @@ if(action != null && action.equals("report")){
 	</tr>
 	<%while(rip.next()){
 		String concen = rip.getString("name");
+		System.out.println(concen);
 		String requir = rip.getString("require");
 		double avgGrade = concentrationGPA.get(concen);
 		double minGPA = rip.getInt("minGPA");
 		if(avgGrade < minGPA || rip.getInt("grad") == 0 ) {
-			sql2 = "select quarter, year from classes where ( (year>2017) or (year = 2017 and quarter < 'SP') ) " +
+			sql2 = "select quarter, year from classes where ( (year>2017) or (year = 2017 and quarter = 'FA') ) " +
 					" and course_name = ? order by year, quarter LIMIT 1";
 			pps = conn.prepareStatement(sql2);
 			pps.setString(1, requir);
@@ -261,7 +272,7 @@ if(action != null && action.equals("report")){
 	rip.close();
 	dead.close();
 }
-}catch(Exception e) {e.printStackTrace();}
+}//catch(Exception e) {e.printStackTrace();}
 finally{
 	if (r!=null){ r.close();}
 	if(rs != null) {rs.close();}
