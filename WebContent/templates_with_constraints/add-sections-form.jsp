@@ -13,6 +13,8 @@
 <%
 String failure = (String) session.getAttribute("failure");
 String success = (String) session.getAttribute("success");
+System.out.println(failure);
+System.out.println(success);
 if (success != null) {
 %>
 <p style="color:rosybrown;font-size:18px;"><bold><%=success%></bold></p>
@@ -34,9 +36,9 @@ Statement s = null;
 ResultSet r  = null;
 ResultSet rs = null;
 String[] day = {"","M","T", "W", "Th", "F", "S", "Su"};
-String[] days = {"","M W F","T Th","M W", "W F", "M","T","W","Th", "F", "M T W", "M T Th" , "M T F", "T W Th", "T W F", "T Th F", "W Th F", "M T","M Th", "T W", "T F", "W Th", "W F", "Th F"};
+String[] days = {"","MWF","TTh","MW", "WF" , "M","T","W","Th", "F"};//, " M T W ", " M T Th " , " M T F ", " T W Th ", " T W F ", " T Th F ", " W Th F ", " M T "," M Th ", " T W ", " T F ", " W Th ", " W F ", " Th F "};
 String[] time = {"", "0800","0900","1000","1100","1200","0100","0200","0300","0400","0500","0600","0700"};
-String[] month ={"","Jan", "Feb", "March","Apr","May", "June", "July", "Aug", "Sep", "Oct", "Nov","Dec"};
+String[] month ={"","Jan", "Feb", "Mar","Apr","May", "June", "July", "Aug", "Sep", "Oct", "Nov","Dec"};
 String[] date = {"","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20",
 		        "21","22","23","24","25","26","27","28","29","30","31"};
 
@@ -241,17 +243,10 @@ for(int i = 0; i < time.length; i++){
 <%}
 
 if(action != null && action.equals("insert")){
-	// Begin transaction
-    conn.setAutoCommit(false);
 
-    // Create the prepared statement and use it to
-    // INSERT student values INTO the students table.
-   String sql = "Insert into sections(sec_id,enr_limit,class_id,taught_by,lecture,discussion,lab,review1,review2,final) " +
-    "values (?,?,?,?,?,?,?,?,?,?)";
-    
-    String lec = request.getParameter("lecDay") + " "+ request.getParameter("lecTime");
-    String dis = request.getParameter("disDay") + " "+ request.getParameter("disTime");
-    String lab = request.getParameter("labDay") + " "+ request.getParameter("labTime");
+   String sql = "Insert into sections(sec_id,enr_limit,class_id,taught_by,lec_day,lec_time,dis_day,dis_time,lab_day,lab_time,rev1,rev2,fin) " +
+    "values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
     String rev1 = request.getParameter("rev1Month") + request.getParameter("rev1Date") +" " +
     			  request.getParameter("rev1Day") + " "+ request.getParameter("rev1Time");
     String rev2 = request.getParameter("rev2Month") + request.getParameter("rev2Date") +" " +
@@ -259,33 +254,43 @@ if(action != null && action.equals("insert")){
     String fin = request.getParameter("finMonth") + request.getParameter("finDate") +" " +
 			  request.getParameter("finDay") + " "+ request.getParameter("finTime");
     
+    //System.out.println("A");
+    
     ps = conn.prepareStatement(sql);
     int secid = Integer.parseInt(request.getParameter("secid"));
     ps.setInt(1,secid);
     ps.setInt(2, Integer.parseInt(request.getParameter("enlimit")));
     ps.setInt(3, Integer.parseInt(request.getParameter("cid")));
     
-    ResultSet set = s.executeQuery("Select taught_by as fac from sections where sec_id = " +secid);
-    if(set.next()){
-    	ps.setString(4,set.getString("fac"));
-    }
-    
-    ps.setString(5,lec);
-    ps.setString(6,dis);
-    ps.setString(7,lab);
-    ps.setString(8,rev1);
-    ps.setString(9,rev2);
-    ps.setString(10,fin);
+    s = conn.createStatement();
+
+    ps.setString(4, null);
+    ps.setString(5,request.getParameter("lecDay"));
+    ps.setString(6,request.getParameter("lecTime"));
+    ps.setString(7,request.getParameter("disDay"));
+    ps.setString(8,request.getParameter("disTime"));
+    ps.setString(9,request.getParameter("labDay"));
+    ps.setString(10,request.getParameter("labTime"));
+    ps.setString(11,rev1);
+    ps.setString(12,rev2);
+    ps.setString(13,fin);
     
     int row = ps.executeUpdate();
     if(row != 0){
         session.setAttribute("success", "You have successfully inserted a section");
         response.sendRedirect("add-sections-form.jsp");
     }
-    
+    System.out.println("C");
 }
 }
-catch(Exception e){}
+catch(SQLException e){
+	System.out.println(e.getSQLState());
+	//System.out.println("message is " + e.getMessage());
+	if(e.getSQLState()=="P0001"){
+		session.setAttribute("failure", e.getMessage());
+		response.sendRedirect("add-sections-form.jsp");
+	}
+}
 finally{
 	if (r!=null){ r.close();}
 	if(rs != null) {rs.close();}
