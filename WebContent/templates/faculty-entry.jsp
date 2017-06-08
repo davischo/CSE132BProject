@@ -35,7 +35,7 @@ if (failure != null) {
                    "jdbc:postgresql://localhost/postgres?" +
                            "user=postgres&password=postgres");
 		 
-    		String action = request.getParameter("action");
+    	    String action = request.getParameter("action");
     		//Check if an insertion is requested
     	   if (action != null && action.equals("insert")) {
 
