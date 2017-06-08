@@ -81,28 +81,39 @@ before insert on enrollment
 for each row
 execute procedure isLimit()
 
--- 4.3 TO CHECK LECTURES OF A FACULTY
+--TO CHECK LECTURES,DISCUSSIONS, AND LABS OF A FACULTY
 create  or replace function isConflictsLecs() returns trigger as
 $body$
-declare
-	lec_day TEXT;
-  lec_time TEXT;
-  taught_by TEXT;
 begin
-	select s.lec_day, s.lec_time, s.taught_by
-    INTO lec_day,lec_time, taught_by
-    FROM sections s;
- 	if ( (NEW.lec_day LIKE '%'||lec_day||'%' OR lec_day LIKE '%'||NEW.lec_day||'%') AND NEW.lec_time LIKE lec_time AND NEW.taught_by=taught_by)
- 	THEN raise exception 'Lecture at that day/time already exists';
+    if( (select COUNT(*)
+    FROM sections s WHERE s.id<>NEW.id AND s.taught_by=NEW.taught_by AND (
+    (NEW.lec_day LIKE '%'||lec_day||'%' OR lec_day LIKE '%'||NEW.lec_day||'%') AND NEW.lec_time LIKE lec_time))> 0 )
+  THEN raise exception 'A lecture at that day/time already exists';
     end if;
- 	end if;
- 	raise notice 'Adding section %', New.id;
- 	return NEW;
- 	end;
- 	$body$language plpgsql;
+  if( (select COUNT(*)
+    FROM sections s WHERE s.id<>NEW.id AND s.taught_by=NEW.taught_by AND (
+    (NEW.lec_day LIKE '%'||dis_day||'%' OR dis_day LIKE '%'||NEW.lec_day||'%') AND NEW.lec_time LIKE dis_time))> 0 )
+  THEN raise exception 'A discussion at that day/time already exists';
+    end if;
+  if( (select COUNT(*)
+    FROM sections s WHERE s.id<>NEW.id AND s.taught_by=NEW.taught_by AND (
+    (NEW.lec_day LIKE '%'||lab_day||'%' OR lab_day LIKE '%'||NEW.lec_day||'%') AND NEW.lec_time LIKE lab_time))> 0 )
+  THEN raise exception 'A lab at that day/time already exists';
+    end if;
+    raise notice 'Adding section %', New.id;
+    return NEW;
+    end;
+    $body$language plpgsql;
+
+drop trigger checkLecs ON sections;
 
 create trigger checkLecs
 before insert on sections
 for each row
 execute procedure isConflictsLecs();
+
+--Used for testing
+Insert into sections(sec_id,enr_limit,class_id,taught_by,lec_day,lec_time,dis_day,dis_time,lab_day,lab_time,rev1,rev2,fin)
+values(8,1,39,'Adam Levine','M', '0300','T', '0800', 'Su','0700', 'Mar1 Th 0700','Mar21 Th 0700', 'Apr15 T 0900');
+select * from sections;
 
