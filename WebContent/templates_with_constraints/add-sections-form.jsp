@@ -13,8 +13,8 @@
 <%
 String failure = (String) session.getAttribute("failure");
 String success = (String) session.getAttribute("success");
-System.out.println(failure);
-System.out.println(success);
+//System.out.println(failure);
+//System.out.println(success);
 if (success != null) {
 %>
 <p style="color:rosybrown;font-size:18px;"><bold><%=success%></bold></p>
@@ -280,16 +280,16 @@ if(action != null && action.equals("insert")){
         session.setAttribute("success", "You have successfully inserted a section");
         response.sendRedirect("add-sections-form.jsp");
     }
-    System.out.println("C");
+    //System.out.println("C");
 }
 }
 catch(SQLException e){
-	System.out.println(e.getSQLState());
-	//System.out.println("message is " + e.getMessage());
-	if(e.getSQLState()=="P0001"){
-		session.setAttribute("failure", e.getMessage());
-		response.sendRedirect("add-sections-form.jsp");
-	}
+    if (request.getParameter("action").equals("insert")) {
+    	if(e.getSQLState().equals("P0001")){
+       		session.setAttribute("failure","Failure to create because " + e.getMessage());
+        	response.sendRedirect("add-sections-form.jsp");
+    	}
+    }
 }
 finally{
 	if (r!=null){ r.close();}

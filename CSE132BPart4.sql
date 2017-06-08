@@ -565,7 +565,6 @@ insert into grade_conversion values('C-', 1.7);
 insert into grade_conversion values('D', 1.0);
 insert into grade_conversion values('F', 0.0);
 
-
 -- creating a section
 create  or replace function isConflicts() returns trigger as
 $body$
@@ -632,6 +631,56 @@ Insert into sections(sec_id,enr_limit,class_id,taught_by,lec_day, lec_time,dis_d
 values(8,1,39,'Selena Gomez','MW', '0700','T', '0700', 'Su','0700', 'Mar1 Th 0700','Mar21 Th 0700', 'Apr15 T 0800');
 select * from sections;
 
+-- enrolling a student
+create or replace function isLimit() returns trigger as
+$body$
+declare
+	sectionLimit INTEGER;
+    sectionEnrolled INTEGER;
+begin
+	select count(s_id), s.enr_limit into sectionEnrolled, sectionLimit
+    from enrollment e, sections s
+    where e.sec = New.sec and s.id = e.sec group by e.sec, s.enr_limit;
+
+    if (sectionEnrolled = sectionLimit) then raise exception 'The section is full. No more students can be added';
+    end if;
+    raise notice 'Adding student %', New.s_id;
+    return NEW;
+end;
+$body$language plpgsql;
+
+create trigger checkLimit
+before insert on enrollment
+for each row
+execute procedure isLimit()
+
+--TO CHECK LECTURES OF A FACULTY
+
+create  or replace function isConflictsLecs() returns trigger as
+$body$
+declare
+	lec_day TEXT;
+  lec_time TEXT;
+  taught_by TEXT;
+begin
+	select s.lec_day, s.lec_time, s.taught_by
+    INTO lec_day,lec_time, taught_by
+    FROM sections s;
+ 	if ( (NEW.lec_day LIKE '%'||lec_day||'%' OR lec_day LIKE '%'||NEW.lec_day||'%') AND NEW.lec_time LIKE lec_time AND NEW.taught_by=taught_by)
+ 	THEN raise exception 'Lecture at that day/time already exists';
+    end if;
+ 	end if;
+ 	raise notice 'Adding section %', New.id;
+ 	return NEW;
+ 	end;
+ 	$body$language plpgsql;
+
+create trigger checkLecs
+before insert on sections
+for each row
+execute procedure isConflictsLecs();
+
+--FOR FUTURE
 
 create  or replace function isConflicts() returns trigger as
 $body$
@@ -687,27 +736,3 @@ begin
  	return NEW;
  	end;
  	$body$language plpgsql;
-
--- enrolling a student
-create or replace function isLimit() returns trigger as
-$body$
-declare
-	sectionLimit INTEGER;
-    sectionEnrolled INTEGER;
-begin
-	select count(s_id), s.enr_limit into sectionEnrolled, sectionLimit
-    from enrollment e, sections s
-    where e.sec = New.sec and s.id = e.sec group by e.sec, s.enr_limit;
-
-    if (sectionEnrolled = sectionLimit) then raise exception 'The section is full. No more students can be added';
-    end if;
-    raise notice 'Adding student %', New.s_id;
-    return NEW;
-end;
-$body$language plpgsql;
-
-create trigger checkLimit
-before insert on enrollment
-for each row
-execute procedure isLimit()
-
