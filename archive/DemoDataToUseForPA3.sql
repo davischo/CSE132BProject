@@ -19,13 +19,17 @@ CREATE TABLE sections(
   sec_id      TEXT NOT NULL,
   enr_limit   INTEGER NOT NULL CHECK(enr_limit>0),
   class_id    INTEGER REFERENCES classes(class_id),
-  taught_by   TEXT REFERENCES faculty(fac_name),
-  lecture 	  TEXT,
-  discussion  TEXT,
-  lab 		  TEXT,
-  review1  	  TEXT,
-  review2     TEXT,
-  Final   	  TEXT
+  taught_by   TEXT REFERENCES faculty(fac_name)
+);
+
+CREATE TABLE meetings(
+  id          SERIAL PRIMARY KEY,
+  type        TEXT NOT NULL,
+  weekly      BOOLEAN NOT NULL,
+  mandatory   BOOLEAN NOT NULL,
+  room        TEXT NOT NULL,
+  day_time    TEXT NOT NULL,
+  sec_id      INTEGER REFERENCES sections(id)
 );
 
 CREATE TABLE enrollment(
@@ -57,12 +61,17 @@ Insert into sections(sec_id,enr_limit,class_id,taught_by) values(11,90,5,'Selena
 Insert into sections(sec_id,enr_limit,class_id,taught_by) values(11,90,6,'Selena Gomez'); --sec6
 
 --CURRENT OFFERED: section 10 --> section_id = 7
-Insert into sections(sec_id,enr_limit,class_id,taught_by,lecture,discussion,lab,review1,review2,final)
-values (10,5,7,'Adele', 'T Th 0500', 'W 0700', 'T Th 0300', 'Feb15 M 1100', 'March14 M 1100', 'March15 Tu 0800');
+Insert into sections(sec_id,enr_limit,class_id,taught_by) values(10,5,7,'Adele'); --sec7 CURRENT SEC
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values('Lecture','true','false','A10','T Th 0500',7);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values('Discussion','true','false','D10','W 0700',7);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Lab','true','false','L10', 'T Th 0300', 7);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Review Session','false','false','S10', 'Feb15 M 1100', 7);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Review Session','false','false','S10', 'March14 M 1100', 7);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Final','false','true','A10', 'March15 Tu 0800', 7);
 
 Insert into classes(course_name,title,quarter,year) values('CSE8A','Introduction to CS: Java','SP',2018); --NEXT OFFERED ,class8
----------------------------------------------------------------
 
+---------------------------------------------------------------
 Insert into classes(course_name,title,quarter,year) values('CSE105','Intro to Theory','WI',2015); --class9
 Insert into classes(course_name,title,quarter,year) values('CSE105','Intro to Theory','WI',2016); --class10
 Insert into classes(course_name,title,quarter,year) values('CSE105','Intro to Theory','SP',2017); --class11 CURRENT QUARTER
@@ -70,8 +79,11 @@ Insert into sections(sec_id,enr_limit,class_id,taught_by) values(11,90,9,'Taylor
 Insert into sections(sec_id,enr_limit,class_id,taught_by) values(11,90,10,'Taylor Swift'); --sec9
 
 --CURRENT OFFERED : section 6 --> section_id = 10
-Insert into sections(sec_id,enr_limit,class_id,taught_by,lecture,discussion,lab,review1,review2,final)
-values(6,3,11,'Taylor Swift', 'T Th 0200', 'F 0600', '','','March15 T 0100', 'March17 Th 0800');
+Insert into sections(sec_id,enr_limit,class_id,taught_by) values(6,3,11,'Taylor Swift'); --sec10 CURRENT SEC
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values('Lecture','true','false','A6','T Th 0200',10);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values('Discussion','true','false','R6','F 0600',10);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Review Session','false','false','S6', 'March15 T 0100', 10);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Final','false','true','A6', 'March17 Th 0800', 10);
 
 Insert into classes(course_name,title,quarter,year) values('CSE105','Intro to Theory','FA',2017); --NEXT OFFERED, class12
 
@@ -103,8 +115,9 @@ Insert into sections(sec_id,enr_limit,class_id) values(11,90,22); --sec18
 Insert into sections(sec_id,enr_limit,class_id) values(11,90,23); --sec19
 
 --CURRENT OFFER: section 3 --> section_id =  20
-Insert into sections(sec_id,enr_limit,class_id,taught_by,lecture,discussion,lab,review1,review2,final)
-values(3,5,24,'Flo Rida', 'M W F 1200', '','','','','March16 W 0800');
+Insert into sections(sec_id,enr_limit,class_id,taught_by) values(3,5,24,'Flo Rida'); --sec20 CURRENT SEC
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values('Lecture','true','false','A3','M W F 1200',20);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Final','false','true','A3', 'March16 W 0800', 20);
 
 Insert into classes(course_name,title,quarter,year) values('CSE255','Data Mining And Predictive Analytics','WI',2018); --NEXT OFFERED class25
 
@@ -123,16 +136,23 @@ Insert into sections(sec_id,enr_limit,class_id) values(11,90,29); --sec23
 
 --CURRENTLY OFFERED: 
 --section 2 --> section_id = 24
-Insert into sections(sec_id,enr_limit,class_id,taught_by,lecture,discussion,lab,review1,review2,final)
-values(2,5,30,'Kelly Clarkson', 'M W F 1000', 'T Th 1100', '', '', 'March07 M 0800', 'March14 M 0800');
-
+Insert into sections(sec_id,enr_limit,class_id) values(2,5,30); -- CURRENT SEC sec24
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values('Lecture','true','false','A2','M W F 1000',24);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Discussion','true','false','R2', 'T Th 1100', 24);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Review Session','false','false','S2', 'March07 M 0800', 24);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Final','false','true','A2', 'March14 M 0800', 24);
 --section 9 --> section_id = 25
-Insert into sections(sec_id,enr_limit,class_id,taught_by,lecture,discussion,lab,review1,review2,final)
-values (9,2,30,'Justin Bieber', 'T Th 0500','M F 0900', '', '','March09 W 0900',  'March16 W 0800' );
-
+Insert into sections(sec_id,enr_limit,class_id) values(9,2,30); -- CURRENT SEC sec25
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values('Lecture','true','false','A9','T Th 0500',25);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values('Discussion','true','false','R9','M F 0900',25);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Review Session','false','false','S9', 'March09 W 0900', 25);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Final','false','true','A9', 'March16 W 0800', 25);
 --section 5 --> section_id = 26
-Insert into sections(sec_id,enr_limit,class_id,taught_by,lecture,discussion,lab,review1,review2,final)
-values(5,3,30,'Kelly Clarkson', 'M W F 1200', 'T Th 1200' ,'','','March08 T 0800','March15 T 0800');
+Insert into sections(sec_id,enr_limit,class_id) values(5,3,30); -- CURRENT SEC sec26
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values('Lecture','true','false','A5','M W F 1200',26);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Discussion','true','false','R5', 'T Th 1200', 26);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Review Session','false','false','S5', 'March08 T 0800', 26);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Final','false','true','A5', 'March15 T 0800', 26);
 
 Insert into classes(course_name,title,quarter,year) values('CSE221','Operating Systems','FA',2017); --NEXT OFFERED class31
 
@@ -159,12 +179,18 @@ Insert into sections(sec_id,enr_limit,class_id) values(11,90,38); --sec32
 
 --CURRENTLY OFFERED:
 -- section 1 --> section_id = 33
-Insert into sections(sec_id,enr_limit,class_id,taught_by,lecture,discussion,lab,review1,review2,final)
-values(1,2,39,'Adele', 'M W F 1000', 'T Th 1000','F 0600', '','', 'March14 M 0800');
+Insert into sections(sec_id,enr_limit,class_id,taught_by) values(1,2,39,'Adele'); --sec33 CURRRENT SEC
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values('Lecture','true','false','A1','M W F 1000',33);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Discussion','true','false','R1', 'T Th 1000', 33);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Lab','true','false','L1', 'F 0600', 33);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Final','false','true','A1', 'March14 M 0800', 33);
 
 -- section 8 --> section_id =  34
-Insert into sections(sec_id,enr_limit,class_id,taught_by,lecture,discussion,lab,review1,review2,final)
-values(8,1,39,'Selena Gomez','T Th 0300','M 0300', 'F 0500', '','', 'March15 T 0800');
+Insert into sections(sec_id,enr_limit,class_id,taught_by) values(8,1,39,'Selena Gomez'); --sec34 CURRRENT SEC
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values('Lecture','true','false','A8','T Th 0300',34);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values('Discussion','true','false','R8','M 0300',34);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Lab','true','false','L8', 'F 0500', 34);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Final','false','true','A8', 'March15 T 0800', 34);
 
 Insert into classes(course_name,title,quarter,year) values('MAE108','Probability And Statistics','FA',2018); --NEXT OFFERED class40
 
@@ -181,10 +207,12 @@ Insert into classes(course_name,title,quarter,year) values('PHIL10','Intro to Lo
 Insert into classes(course_name,title,quarter,year) values('PHIL12','Scientific Reasoning','WI',2016); --class44
 Insert into classes(course_name,title,quarter,year) values('PHIL12','Scientific Reasoning','SP',2017); --class45 CURRENT QUARTER
 Insert into sections(sec_id,enr_limit,class_id) values(11,90,44); --sec37
-
 --Currently Offered: section 4 --> section_id = 38
-Insert into sections(sec_id,enr_limit,class_id,taught_by,lecture,discussion,lab,review1,review2,final)
-values(4,2,45,'Adam Levine', 'M W F 1200', 'W F 100' ,'','','March07 M 0900','March16 W 0800');
+Insert into sections(sec_id,enr_limit,class_id,taught_by) values(4,2,45,'Adam Levine'); --sec38 CURRENT SEC
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values('Lecture','true','false','A4','M W F 1200',38);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Discussion','true','false','R4', 'W F 100', 38);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Review Session','false','false','S4', 'March07 M 0900', 38);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Final','false','true','A4', 'March14 M 0800', 38);
 
 Insert into classes(course_name,title,quarter,year) values('PHIL12','Scientific Reasoning','SP',2018); --NEXT OFFERED class46
 
@@ -203,8 +231,12 @@ Insert into sections(sec_id,enr_limit,class_id,taught_by) values(11,90,50,'Flo R
 Insert into sections(sec_id,enr_limit,class_id,taught_by) values(11,90,51,'Adam Levine'); --sec43
 
 --Currently Offered: section 7 --> section_id = 44
-Insert into sections(sec_id,enr_limit,class_id,taught_by,lecture,discussion,lab,review1,review2,final)
-values(7,3,52,'Adam Levine', 'T Th 0300', 'Th 0100', '', 'Jan29 F 0800', 'March17 Th 0500', 'March18 F 0800');
+Insert into sections(sec_id,enr_limit,class_id,taught_by) values(7,3,52,'Adam Levine'); --sec44 CURRENT SEC
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values('Lecture','true','false','A7','T Th 0300',44);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values('Discussion','true','false','R7','Th 0100',44);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Review Session','false','false','S7', 'Jan29 F 0800', 44);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Review Session','false','false','S7', 'March17 Th 0500', 44);
+Insert into meetings(type, weekly, mandatory, room, day_time, sec_id) values ('Final','false','true','A7', 'March18 F 0800', 44);
 
 Insert into classes(course_name,title,quarter,year) values('PHIL165','Freedom, Equality, and The Law','SP',2018); --NEXT OFFERED class53
 ---------------------------------------------------------------
@@ -239,16 +271,16 @@ values(4,9,'WI',2015,4,'Letter','C');
 --CSE250A
 --Dave
 insert into enrollment(s_id,class_id, quarter, year, units, grade_opt, grade)
-values(16,13,'FA',2014,4,'Letter','C');
+values(16,13,'WI',2015,4,'Letter','C');
 --Tim
 insert into enrollment(s_id,class_id, quarter, year, units, grade_opt, grade)
-values(22,14,'FA',2015,4,'Letter','B+');
+values(22,14,'WI',2015,4,'Letter','B+');
 --Andrew
 insert into enrollment(s_id,class_id, quarter, year, units, grade_opt, grade)
-values(18,14,'FA',2015,4,'Letter','D');
+values(18,14,'WI',2015,4,'Letter','D');
 --Nathan
 insert into enrollment(s_id,class_id, quarter, year, units, grade_opt, grade)
-values(19,14,'FA',2015,4,'Letter','F');
+values(19,14,'WI',2015,4,'Letter','F');
 --CSE250B
 --Nelson
 insert into enrollment(s_id,class_id, quarter, year, units, grade_opt, grade)
@@ -318,16 +350,16 @@ values(12,47,'SP',2015,4,'Letter','D');
 insert into enrollment(s_id,class_id, quarter, year, units, grade_opt, grade)
 values(11,48,'FA',2015,4,'Letter','A-');
 
--- 1->38,33
--- 2->30,24
--- 3->24,20
--- 4->44,38
--- 5->30,26
--- 6->11,10
--- 7->51,44
--- 8->38,34
--- 9->30,25
--- 10->7,7
+1->38,33
+2->30,24
+3->24,20
+4->44,38
+5->30,26
+6->11,10
+7->51,44
+8->38,34
+9->30,25
+10->7,7
 
 --CURRENT ENROLLED STUDENTS
 --name  sec grade           units

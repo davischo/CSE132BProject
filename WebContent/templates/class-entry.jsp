@@ -61,7 +61,6 @@ if (failure != null) {
 	            // Commit transaction
 	            conn.commit();
 	            conn.setAutoCommit(true);
-
              }
           %>
           <!-- Add an HTML table header row to format the results -->
