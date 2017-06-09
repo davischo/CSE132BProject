@@ -662,17 +662,17 @@ begin
 	if( (select COUNT(*)
     FROM sections s WHERE s.id<>NEW.id AND s.taught_by=NEW.taught_by AND (
     (NEW.lec_day LIKE '%'||lec_day||'%' OR lec_day LIKE '%'||NEW.lec_day||'%') AND NEW.lec_time LIKE lec_time))> 0 )
-  THEN raise exception 'A lecture at that day/time already exists';
+  THEN raise exception 'This professor has a lecture at that day/time already';
     end if;
   if( (select COUNT(*)
     FROM sections s WHERE s.id<>NEW.id AND s.taught_by=NEW.taught_by AND (
     (NEW.lec_day LIKE '%'||dis_day||'%' OR dis_day LIKE '%'||NEW.lec_day||'%') AND NEW.lec_time LIKE dis_time))> 0 )
-  THEN raise exception 'A discussion at that day/time already exists';
+  THEN raise exception 'This professor has a discussion at that day/time already';
     end if;
   if( (select COUNT(*)
     FROM sections s WHERE s.id<>NEW.id AND s.taught_by=NEW.taught_by AND (
     (NEW.lec_day LIKE '%'||lab_day||'%' OR lab_day LIKE '%'||NEW.lec_day||'%') AND NEW.lec_time LIKE lab_time))> 0 )
-  THEN raise exception 'A lab at that day/time already exists';
+  THEN raise exception 'This professor has a lab at that day/time already';
     end if;
  	raise notice 'Adding section %', New.id;
  	return NEW;
@@ -682,7 +682,7 @@ begin
 drop trigger checkLecs ON sections;
 
 create trigger checkLecs
-before insert on sections
+before insert or update on sections
 for each row
 execute procedure isConflictsLecs();
 
@@ -690,8 +690,14 @@ Insert into sections(sec_id,enr_limit,class_id,taught_by,lec_day,lec_time,dis_da
 values(8,1,39,'Adam Levine','M', '0300','T', '0800', 'Su','0700', 'Mar1 Th 0700','Mar21 Th 0700', 'Apr15 T 0900');
 select * from sections;
 
---FOR FUTURE
+Select s.sec_id, cl.class_id, s.lec_day, s.lec_time, c.course_name from sections s, classes cl, courses c
+			where s.sec_id <> '11' AND s.class_id=cl.class_id AND cl.course_name=c.course_name;
 
+UPDATE sections SET taught_by='' WHERE sec_id='';
+
+
+--FOR FUTURE
+/*
 create  or replace function isConflicts() returns trigger as
 $body$
 declare
@@ -746,3 +752,4 @@ begin
  	return NEW;
  	end;
  	$body$language plpgsql;
+*/
